@@ -1,0 +1,30 @@
+<div class="navbar navbar-worldskills navbar-static-top">
+	<div class="cube-container">
+		<div class="cube-right-bottom-blue">&nbsp;</div>
+	</div>
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse"
+				data-target=".navbar-ex1-collapse">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="/">Developers</a>
+		</div>
+		<div class="collapse navbar-collapse navbar-ex1-collapse">
+			<ul class="nav navbar-nav">
+				<li{% if page.url == "/" %} class="active"{% endif %}><a href="/">Overview</a></li>
+				<li class="dropdown{% if page.url contains "/api/" %} active{% endif %}"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown">Web Services <span class="caret"></span></a>
+					<ul class="dropdown-menu" role="menu">
+						<li><a href="/api/">Introduction</a></li>
+						<li class="divider"></li>
+						<li><a href="/api/events/">Events</a></li>
+						<li><a href="#">Images</a></li>
+						<li><a href="#">Logs</a></li>
+					</ul></li>
+			</ul>
+		</div>
+	</div>
+</div>

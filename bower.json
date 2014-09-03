@@ -1,0 +1,8 @@
+{
+  "name": "worldskills-developers",
+  "dependencies": {
+    "jquery": "~1.10.2",
+    "worldskills-bootstrap": "*",
+    "handlebars": "~2.0.0"
+  }
+}

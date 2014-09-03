@@ -1,0 +1,188 @@
+<!doctype html>
+<html>
+<head>
+{% include header.html %}
+</head>
+<body data-spy="scroll" data-target=".sidebar">
+    {% include nav.html %}
+
+	<div class="container">
+
+		{{ content }}
+
+		{% include footer.html %}
+
+	</div>
+
+	{% raw %}
+	<script id="api-template" type="text/x-handlebars-template">
+		{{#each apis}}
+			<h2 id="{{id}}">{{description}}</h2>
+
+			{{#each api.apis}}
+				{{#each operations}}
+				<div class="panel panel-{{label}}">
+					<div class="panel-heading">
+						<h3 class="panel-title" id="{{id}}">
+							<span class="label label-{{label}}">{{method}}</span> {{../../api.resourcePath}}{{../path}}
+						</h3>
+					</div>
+
+					<div class="panel-body">
+						<p>{{summary}}</p>
+
+						<p>{{notes}}</p>
+
+						<div class="page-header">
+							<h4>Request</h4>
+						</div>
+						<div class="row">
+							<div class="col-lg-6">
+								{{#if pathParams.length}}
+									<h5>Path parameters</h5>
+									<table class="table table-bordered table-striped">
+										<colgroup>
+											<col width="30%" />
+											<col width="70%" />
+										</colgroup>
+										<tbody>
+											{{#each pathParams}}
+												<tr>
+													<td><code>{{name}}</code></td>
+													<td>
+														<em>{{type}}{{#if format}} ({{format}}){{/if}}{{#if defaultValue}}, default is {{defaultValue}}{{/if}}</em>
+													</td>
+												</tr>
+											{{/each}}
+										</tbody>
+									</table>
+								{{/if}}
+								{{#if queryParams.length}}
+									<h5>Query parameters</h5>
+									<table class="table table-bordered table-striped">
+										<colgroup>
+											<col width="30%" />
+											<col width="70%" />
+										</colgroup>
+										<tbody>
+											{{#each queryParams}}
+												<tr>
+													<td><code>{{name}}</code></td>
+													<td>
+														<em>{{type}}{{#if format}} ({{format}}){{/if}}{{#if defaultValue}}, default is {{defaultValue}}{{/if}}</em><br/>
+														{{description}}
+														{{#if enum}}
+														, can be {{#each enum}} <code>{{this}}</code>{{/each}}.
+														{{/if}}
+														</ul>
+													</td>
+												</tr>
+											{{/each}}
+										</tbody>
+									</table>
+								{{/if}}
+								{{#each requestModels}}
+									<h5>{{id}}</h5>
+
+									<table class="table table-bordered table-striped">
+										<colgroup>
+											<col width="30%" />
+											<col width="70%" />
+										</colgroup>
+										<tbody>
+											{{#each properties}}
+												<tr>
+													<td><code>{{@key}}</code></td>
+													<td>
+														<em>{{type}}{{#if format}} ({{format}}){{/if}}{{#if $ref}}{{$ref}}{{/if}}{{#if items.$ref}}[{{items.$ref}}]{{/if}}</em><br/>
+														{{description}}
+													</td>
+												</tr>
+											{{/each}}
+										</tbody>
+									</table>
+								{{/each}}
+							</div>
+							<div class="col-lg-6">
+								<h5>Example request with curl</h5>
+
+								<pre><code>curl "{{../../api.basePath}}{{../../api.resourcePath}}{{../path}}" \
+  -X {{method}} \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json"{{#if requestExample}} \
+  -d {{requestExample}}{{/if}}</code></pre>
+							</div>
+						</div>
+						<div class="page-header">
+							<h4>Response</h4>
+						</div>
+						<div class="row">
+							<div class="col-lg-6">
+
+								{{#if responseMessages}}
+									<h5>Status codes</h5>
+									<table class="table table-bordered table-striped">
+										<colgroup>
+											<col width="30%" />
+											<col width="70%" />
+										</colgroup>
+										<tbody>
+											{{#each responseMessages}}
+												<tr>
+													<td><code>{{code}}</code></td>
+													<td>{{message}}</td>
+												</tr>
+											{{/each}}
+										</tbody>
+									</table>
+								{{/if}}
+								{{#each models}}
+									<h5>{{id}}</h5>
+
+									<table class="table table-bordered table-striped">
+										<colgroup>
+											<col width="30%" />
+											<col width="70%" />
+										</colgroup>
+										<tbody>
+											{{#each properties}}
+												<tr>
+													<td><code>{{@key}}</code></td>
+													<td>
+														<em>{{type}}{{#if format}} ({{format}}){{/if}}{{#if $ref}}{{$ref}}{{/if}}{{#if items.$ref}}[{{items.$ref}}]{{/if}}</em>
+														{{description}}
+													</td>
+												</tr>
+											{{/each}}
+										</tbody>
+									</table>
+								{{/each}}
+							</div>
+							<div class="col-lg-6">
+								<h5>Response schema</h5>
+
+								{{#if example}}
+									<pre>{{example}}</pre>
+								{{else}}
+									<pre><em>Empty response</em></pre>
+								{{/if}}
+							</div>
+						</div>
+					</div>
+				</div>
+				{{/each}}
+			{{/each}}
+		{{/each}}
+	</script>
+	{% endraw %}
+
+	<script>
+	var WORLDSKILLS_API_DOCS = '{{page.api_docs}}';
+	</script>
+	<script src="/bower_components/jquery/jquery.min.js"></script>
+	<script src="/bower_components/worldskills-bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="/bower_components/handlebars/handlebars.min.js"></script>
+	<script src="/bower_components/handlebars/handlebars.runtime.min.js"></script>
+	<script src="/assets/js/docs.js"></script>
+</body>
+</html>

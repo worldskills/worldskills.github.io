@@ -1,0 +1,30 @@
+body {
+	position: relative;
+}
+
+.sidebar .affix {
+	position: static;
+}
+
+@media (min-width: 992px) {
+	.sidebar .affix {
+		position: fixed;
+		top: 20px;
+		width: 213px;
+	}
+}
+
+@media (min-width: 1200px) {
+	.sidebar .affix {
+		width: 165px;
+	}
+}
+
+pre {
+    overflow-x: auto;
+}
+
+pre code {
+    overflow-wrap: normal;
+    white-space: pre;
+}
