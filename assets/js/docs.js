@@ -13,6 +13,11 @@ $(function () {
 					models[name] = model;
 
 					$.each(model.properties, function (name, property) {
+						if ($.inArray(name, model.required) !== -1) {
+							property.required = true;
+						} else {
+							property.required = false;
+						}
 						if (typeof property.$ref != 'undefined') {
 							models = findModels(property.$ref, all, models);
 						}

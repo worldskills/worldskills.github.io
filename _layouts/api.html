@@ -50,7 +50,7 @@
 												<tr>
 													<td><code>{{name}}</code></td>
 													<td>
-														<em>{{type}}{{#if format}} ({{format}}){{/if}}{{#if defaultValue}}, default is {{defaultValue}}{{/if}}</em>
+														{{type}}{{#if format}} ({{format}}){{/if}}{{#if defaultValue}}, default is {{defaultValue}}{{/if}}
 													</td>
 												</tr>
 											{{/each}}
@@ -69,12 +69,10 @@
 												<tr>
 													<td><code>{{name}}</code></td>
 													<td>
-														<em>{{type}}{{#if format}} ({{format}}){{/if}}{{#if defaultValue}}, default is {{defaultValue}}{{/if}}</em><br/>
-														{{description}}
-														{{#if enum}}
-														, can be {{#each enum}} <code>{{this}}</code>{{/each}}.
-														{{/if}}
-														</ul>
+														{{type}}{{#if format}} ({{format}}){{/if}}{{#if defaultValue}}, default is {{defaultValue}}{{/if}}{{#if required}} <span class="label label-default">required</span>{{/if}}<br/>
+														<span class="text-muted">
+															{{description}}{{#if enum}}, can be {{#each enum}} <em>{{this}}</em>{{#if @last}}{{else}},{{/if}}{{/each}}.{{/if}}
+														</span>
 													</td>
 												</tr>
 											{{/each}}
@@ -94,8 +92,8 @@
 												<tr>
 													<td><code>{{@key}}</code></td>
 													<td>
-														<em>{{type}}{{#if format}} ({{format}}){{/if}}{{#if $ref}}{{$ref}}{{/if}}{{#if items.$ref}}[{{items.$ref}}]{{/if}}</em><br/>
-														{{description}}
+														{{type}}{{#if format}} ({{format}}){{/if}}{{#if $ref}}{{$ref}}{{/if}}{{#if items.$ref}}[{{items.$ref}}]{{/if}}{{#if required}} <span class="label label-default">required</span>{{/if}}<br/>
+														<span class="text-muted">{{description}}</span>
 													</td>
 												</tr>
 											{{/each}}
@@ -149,8 +147,8 @@
 												<tr>
 													<td><code>{{@key}}</code></td>
 													<td>
-														<em>{{type}}{{#if format}} ({{format}}){{/if}}{{#if $ref}}{{$ref}}{{/if}}{{#if items.$ref}}[{{items.$ref}}]{{/if}}</em>
-														{{description}}
+														{{type}}{{#if format}} ({{format}}){{/if}}{{#if $ref}}{{$ref}}{{/if}}{{#if items.$ref}}[{{items.$ref}}]{{/if}}<br/>
+														<span class="text-muted">{{description}}</span>
 													</td>
 												</tr>
 											{{/each}}
