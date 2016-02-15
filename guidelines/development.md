@@ -23,3 +23,7 @@ Coding guidelines and best practices for code development.
 ### PHP
 - Code should follow [PSR-2: Coding Style Guide](http://www.php-fig.org/psr/psr-2/).
 - Code must use 4 spaces for indenting.
+
+### JavaScript
+- Code should follow [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript#whitespace).
+- Code must use 2 spaces for indenting.
