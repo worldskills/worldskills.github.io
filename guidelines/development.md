@@ -17,7 +17,7 @@ Coding guidelines and best practices for code development.
 - Complex code should be tested with unit tests.
 
 ### Java
-- Code should be formatted with the WSI code formatter profile.
+- Code should be formatted with the [WSI code formatter profile](/assets/xml/WSI.xml).
 - Code must use tabs for indenting.
 
 ### PHP
