@@ -1,17 +1,10 @@
 ---
-title: Development guidelines
 layout: default
+title: Development guidelines
+breadcrumb: Development
 ---
 
-<ol class="breadcrumb">
-    <li><a href="/">Home</a></li>
-    <li><a href="/guidelines/">Guidelines</a></li>
-    <li class="active">Development guidelines</li>
-</ol>
-
-<div class="page-header">
-    <h1>Development guidelines</h1>
-</div>
+# Development guidelines
 
 Coding guidelines and best practices for code development.
 
