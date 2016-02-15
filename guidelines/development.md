@@ -25,5 +25,5 @@ Coding guidelines and best practices for code development.
 - Code must use 4 spaces for indenting.
 
 ### JavaScript
-- Code should follow [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript#whitespace).
+- Code should follow [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript).
 - Code must use 2 spaces for indenting.
