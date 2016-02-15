@@ -7,3 +7,7 @@
 - https://www.readability.com/developers/api/reader
 - https://docs.atlassian.com/atlassian-confluence/REST/latest/#d3e586
 - http://docs.volusion.apiary.io
+- https://developer.wunderlist.com/
+
+- https://github.com/angular/angular/blob/master/CONTRIBUTING.md
+- https://ghost.org/about/guidelines/
