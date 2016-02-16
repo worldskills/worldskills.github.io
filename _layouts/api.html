@@ -106,7 +106,7 @@
                             <div class="col-lg-6">
                                 <h5>Example request with curl</h5>
 
-                                <pre><code>curl "{{../../api.basePath}}{{../../api.resourcePath}}{{../path}}" \
+                                <pre><code>curl "{{#each ../../swagger.schemes}}{{this}}{{/each}}://{{../../swagger.host}}{{../../swagger.basePath}}{{path}}" \
   -X {{method}} \
   -H "Accept: application/json" \
   -H "Content-Type: application/json"{{#if example}} \
