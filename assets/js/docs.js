@@ -1,186 +1,176 @@
 $(function () {
 
-	var base = WORLDSKILLS_API_DOCS;
-	
-	function findModels(type, all, models) {
+  var base = WORLDSKILLS_API_DOCS;
+  
+  function buildProperties(type, definitions, properties, path) {
 
-		if (typeof all != 'undefined') {
+    if (typeof definitions != 'undefined') {
 
-			$.each(all, function (name, model) {
+      $.each(definitions, function (name, definition) {
 
-				if (name == type) {
+        if ('#/definitions/' + name == type) {
 
-					models[name] = model;
+          $.each(definition.properties, function (name, property) {
+            if ($.inArray(name, definition.required) !== -1) {
+              property.required = true;
+            } else {
+              property.required = false;
+            }
+            properties[path + name] = property;
+            if (typeof property.$ref != 'undefined') {
+              properties = buildProperties(property.$ref, definitions, properties, path + name + '.');
+            }
+            if (typeof property.items != 'undefined' && property.items.$ref != type) {
+              properties = buildProperties(property.items.$ref, definitions, properties, path + name + '[].');
+            }
+          });
+        }
+      });
+    }
 
-					$.each(model.properties, function (name, property) {
-						if ($.inArray(name, model.required) !== -1) {
-							property.required = true;
-						} else {
-							property.required = false;
-						}
-						if (typeof property.$ref != 'undefined') {
-							models = findModels(property.$ref, all, models);
-						}
-						if (typeof property.items != 'undefined') {
-							models = findModels(property.items.$ref, all, models);
-						}
-					});
-				}
-			});
-		}
+    return properties;
+  }
 
-		return models;
-	}
+  function buildExample(type, definitions, optional) {
 
-	function buildExample(type, models, optional) {
+    if (type == 'string') {
+      return '';
+    }
 
-		if (type == 'string') {
-			return '';
-		}
+    if (type == 'boolean') {
+      return false;
+    }
 
-		if (type == 'boolean') {
-			return false;
-		}
+    if (type == 'integer' || type == 'double' || type == 'number') {
+      return 0;
+    }
 
-		if (type == 'integer') {
-			return 0;
-		}
+    if (type == 'array') {
+      return [];
+    }
 
-		if (type == 'double' || type == 'number') {
-			return 0.0;
-		}
+    var example = {};
 
-		if (type == 'array') {
-			return [];
-		}
+    if (typeof definitions != 'undefined') {
 
-		var example = {};
+      $.each(definitions, function (name, definition) {
 
-		if (typeof models != 'undefined') {
+        if ('#/definitions/' + name == type) {
 
-			$.each(models, function (name, model) {
+          $.each(definition.properties, function (name, property) {
 
-				if (name == type) {
+            if (optional || $.inArray(name, definition.required) !== -1) {
+              if (typeof property.type != 'undefined') {
+                example[name] = buildExample(property.type, definitions, optional);            
+              }
+              if (typeof property.$ref != 'undefined') {
+                example[name] = buildExample(property.$ref, definitions, optional);
+              }
+              if (typeof property.items != 'undefined' && property.items.$ref != type) {
+                example[name].push(buildExample(property.items.$ref, definitions, optional));
+              }
+            }
+          });
+        }
+      });
+    }
 
-					$.each(model.properties, function (name, property) {
+    return example;
+  }
 
-						if (optional || $.inArray(name, model.required) !== -1) {
-							if (typeof property.type != 'undefined') {
-								example[name] = buildExample(property.type, models, optional);						
-							}
-							if (typeof property.$ref != 'undefined') {
-								example[name] = buildExample(property.$ref, models, optional);
-							}
-							if (typeof property.items != 'undefined') {
-								example[name].push(buildExample(property.items.$ref, models, optional));
-							}
-						}
-					});
-				}
-			});
-		}
+  function sanitize(text) {
+    var value = text.replace(/[\s!@#$%^&*()_+=\[{\]};:<>|.\/?,\\'""-]/g, '-');
+    value = value.replace(/((-){2,})/g, '-');
+    value = value.replace(/^(-)*/g, '');
+    value = value.replace(/([-])*$/g, '');
+    return value;
+  }
 
-		return example;
-	}
+  $.get(base, function (swagger) {
 
-	function sanitize(text) {
-		var value = text.replace(/[\s!@#$%^&*()_+=\[{\]};:<>|.\/?,\\'""-]/g, '-');
-		value = value.replace(/((-){2,})/g, '-');
-		value = value.replace(/^(-)*/g, '');
-		value = value.replace(/([-])*$/g, '');
-		return value;
-	}
-	
-	$.get(base, function (json) {
+    var tags = {};
 
-		var apis = [];
+    $.each(swagger.tags, function (i, tag) {
+      tag.operations = [];
+    });
 
-		var requests = [];
-		$.each(json.apis, function (i, api) {
+    $.each(swagger.paths, function (path, resource) {
 
-			api.id = sanitize(api.path);
+      $.each(resource, function (method, operation) {
 
-			requests.push($.get(base + api.path, function (apiJson) {
+        $.each(operation.tags, function (i, tagName) {
 
-				api.api = apiJson;
+            $.each(swagger.tags, function (j, tag) {
 
-				$.each(apiJson.apis, function (i, resource) {
+                if (tag.name == tagName) {
+                    tag.operations.push(operation);
+                }
+            });
+        });
 
-					$.each(resource.operations, function (i, operation) {
+        operation.path = path;
+        operation.method = method.toUpperCase();
 
-						operation.label = 'default';
-						if (operation.method == 'GET') {
-							operation.label = 'success';
-						}
-						if (operation.method == 'POST') {
-							operation.label = 'info';
-						}
-						if (operation.method == 'PUT') {
-							operation.label = 'warning';
-						}
-						if (operation.method == 'DELETE') {
-							operation.label = 'danger';
-						}
-						
-						operation.id = sanitize(api.api.resourcePath + ' ' + operation.nickname);
+        operation.label = 'default';
+        if (method == 'get') {
+          operation.label = 'success';
+        }
+        if (method == 'post') {
+          operation.label = 'info';
+        }
+        if (method == 'put') {
+          operation.label = 'warning';
+        }
+        if (method == 'delete') {
+          operation.label = 'danger';
+        }
 
-						if (operation.type != 'void') {
+        operation.id = sanitize(path + ' ' + operation.operationId);
 
-							operation.models = findModels(operation.type, apiJson.models, {});
+        operation.queryParams = [];
+        operation.pathParams = [];
+        $.each(operation.parameters, function (i, parameter) {
+          if (parameter.in == 'query') {
+            operation.queryParams.push(parameter);
+          }
+          if (parameter.in == 'path') {
+            operation.pathParams.push(parameter);
+          }
+          if (parameter.in == 'body') {
+            operation.properties = buildProperties(parameter.schema.$ref, swagger.definitions, {}, '');
+            operation.example = JSON.stringify(buildExample(parameter.schema.$ref, swagger.definitions, false));
+          }
+        });
 
-							operation.example = JSON.stringify(buildExample(operation.type, apiJson.models, true), null, 4);
-						}
+        $.each(operation.responses, function (code, response) {
 
-						operation.queryParams = [];
-						operation.pathParams = [];
-						operation.requestModels = [];
-						$.each(operation.parameters, function (i, parameter) {
-							if (parameter.paramType == 'query') {
-								operation.queryParams.push(parameter);
-							}
-							if (parameter.paramType == 'path') {
-								operation.pathParams.push(parameter);
-							}
-							if (parameter.paramType == 'body') {
-								operation.requestModels = findModels(parameter.type, apiJson.models, {});
-								operation.requestExample = JSON.stringify(buildExample(parameter.type, apiJson.models, false));
-							}
-						});
-					});
-				});
-			}));
+            if (typeof response.schema != 'undefined' && typeof response.schema.$ref != 'undefined') {
+                response.properties = buildProperties(response.schema.$ref, swagger.definitions, {}, '');
+                response.example = JSON.stringify(buildExample(response.schema.$ref, swagger.definitions, true), null, 4);
+            }
+        });
+      });
+    });
 
-			apis.push(api);
-		});
+    // render API nav
+    $.each(swagger.tags, function (i, tag) {
 
-		$.when.apply($, requests).done(function () {
+        $('.sidebar .list-unstyled').append('<li><a href="#' + tag.name + '">' + tag.name + '</a></li>');
 
-			console.log(apis);
+        $.each(tag.operations, function (i, operation) {
 
-			// render API nav
-			$.each(apis, function (i, api) {
+          $('.sidebar .list-unstyled').append('<li><a href="#' + operation.id + '"><small>&nbsp;&nbsp;&nbsp;' + operation.method + ' ' + swagger.basePath + operation.path + '</small></a></li>');
 
-				$('.sidebar .nav').append('<li><a href="#' + api.id + '">' + api.description + '</a></li>');
+        });
+    });
 
-				$.each(api.api.apis, function (i, resource) {
+    // render API content
+    var source = $('#api-template').html();
+    var template = Handlebars.compile(source);
 
-					$.each(resource.operations, function (i, operation) {
+    var context = {swagger: swagger};
+    var html = template(context);
 
-						$('.sidebar .nav').append('<li><a href="#' + operation.id + '"><small>&nbsp;&nbsp;&nbsp;' + operation.method + ' ' + api.api.resourcePath + resource.path + '</small></a></li>');
-					});
-				});
-			});
-
-			// render API content
-			var source = $('#api-template').html();
-			var template = Handlebars.compile(source);
-
-			var context = {apis: apis};
-			var html = template(context);
-
-			$('#api').html(html);
-		});
-	});
-	
-	
+    $('#api').html(html);
+  });
 });
