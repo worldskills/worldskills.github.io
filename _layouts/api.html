@@ -80,8 +80,8 @@
                                         </tbody>
                                     </table>
                                 {{/if}}
-                                {{#if properties}}
-                                    <h5>Request body</h5>
+                                {{#each definitions}}
+                                    <h5>{{@key}}</h5>
 
                                     <table class="table table-bordered table-striped">
                                         <colgroup>
@@ -93,7 +93,7 @@
                                                 <tr>
                                                     <td><code>{{@key}}</code></td>
                                                     <td>
-                                                        {{type}}{{#if format}} ({{format}}){{/if}}{{#if $ref}}{{$ref}}{{/if}}{{#if pattern}} ({{pattern}}){{/if}}
+                                                        {{type}}{{#if format}} ({{format}}){{/if}}{{#if definition}}{{definition}}{{/if}}{{#if items.definition}}[{{items.definition}}]{{/if}}{{#if pattern}} ({{pattern}}){{/if}}
                                                         {{#if required}}<span class="label label-default">required</span>{{/if}}<br/>
                                                         <span class="text-muted">{{description}}</span>
                                                     </td>
@@ -101,7 +101,7 @@
                                             {{/each}}
                                         </tbody>
                                     </table>
-                                {{/if}}
+                                {{/each}}
                             </div>
                             <div class="col-lg-6">
                                 <h5>Example request with curl</h5>
@@ -113,33 +113,35 @@
   -d {{example}}{{/if}}</code></pre>
                             </div>
                         </div>
-                        <div class="page-header">
-                            <h4>Response</h4>
-                        </div>
-
                         {{#each responses}}
+                            <div class="page-header">
+                                <h4>Response <small>{{@key}} {{description}}</small></h4>
+                            </div>
+
                             <div class="row">
                                 <div class="col-lg-6">
-                                    <h5>{{@key}} {{description}}</h5>
+                                    {{#each definitions}}
+                                        <h5>{{@key}}</h5>
 
-                                    <table class="table table-bordered table-striped">
-                                        <colgroup>
-                                            <col width="30%" />
-                                            <col width="70%" />
-                                        </colgroup>
-                                        <tbody>
-                                            {{#each properties}}
-                                                <tr>
-                                                    <td><code>{{@key}}</code></td>
-                                                    <td>
-                                                        {{type}}{{#if format}} ({{format}}){{/if}}{{#if $ref}}{{$ref}}{{/if}}{{#if pattern}} ({{pattern}}){{/if}}
-                                                        {{#if required}}<span class="label label-default">required</span>{{/if}}<br/>
-                                                        <span class="text-muted">{{description}}</span>
-                                                    </td>
-                                                </tr>
-                                            {{/each}}
-                                        </tbody>
-                                    </table>
+                                        <table class="table table-bordered table-striped">
+                                            <colgroup>
+                                                <col width="30%" />
+                                                <col width="70%" />
+                                            </colgroup>
+                                            <tbody>
+                                                {{#each properties}}
+                                                    <tr>
+                                                        <td><code>{{#if xml.name}}{{xml.name}}{{else}}{{@key}}{{/if}}</code></td>
+                                                        <td>
+                                                            {{type}}{{#if format}} ({{format}}){{/if}}{{#if definition}}{{definition}}{{/if}}{{#if items.definition}}[{{items.definition}}]{{/if}}{{#if pattern}} ({{pattern}}){{/if}}
+                                                            {{#if required}}<span class="label label-default">required</span>{{/if}}<br/>
+                                                            <span class="text-muted">{{description}}</span>
+                                                        </td>
+                                                    </tr>
+                                                {{/each}}
+                                            </tbody>
+                                        </table>
+                                    {{/each}}
                                 </div>
                                 <div class="col-lg-6">
                                     <h5>Schema</h5>

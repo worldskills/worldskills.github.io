@@ -2,13 +2,18 @@ $(function () {
 
   var base = WORLDSKILLS_API_DOCS;
   
-  function buildProperties(type, definitions, properties, path) {
+  function buildDefinitions(type, all, definitions) {
+
+    var typeName = type;
 
     if (typeof definitions != 'undefined') {
 
-      $.each(definitions, function (name, definition) {
+      $.each(all, function (name, definition) {
 
         if ('#/definitions/' + name == type) {
+
+          typeName = name;
+          definitions[name] = definition;
 
           $.each(definition.properties, function (name, property) {
             if ($.inArray(name, definition.required) !== -1) {
@@ -16,19 +21,18 @@ $(function () {
             } else {
               property.required = false;
             }
-            properties[path + name] = property;
             if (typeof property.$ref != 'undefined') {
-              properties = buildProperties(property.$ref, definitions, properties, path + name + '.');
+              property.definition = buildDefinitions(property.$ref, all, definitions);
             }
             if (typeof property.items != 'undefined' && property.items.$ref != type) {
-              properties = buildProperties(property.items.$ref, definitions, properties, path + name + '[].');
+              property.items.definition = buildDefinitions(property.items.$ref, all, definitions);
             }
           });
         }
       });
     }
 
-    return properties;
+    return typeName;
   }
 
   function buildExample(type, definitions, optional) {
@@ -60,6 +64,9 @@ $(function () {
           $.each(definition.properties, function (name, property) {
 
             if (optional || $.inArray(name, definition.required) !== -1) {
+              if (typeof property.xml != 'undefined' && typeof property.xml.name != 'undefined') {
+                name = property.xml.name;
+              }
               if (typeof property.type != 'undefined') {
                 example[name] = buildExample(property.type, definitions, optional);            
               }
@@ -137,7 +144,8 @@ $(function () {
             operation.pathParams.push(parameter);
           }
           if (parameter.in == 'body') {
-            operation.properties = buildProperties(parameter.schema.$ref, swagger.definitions, {}, '');
+            operation.definitions = {};
+            buildDefinitions(parameter.schema.$ref, swagger.definitions, operation.definitions);
             operation.example = JSON.stringify(buildExample(parameter.schema.$ref, swagger.definitions, false));
           }
         });
@@ -145,8 +153,9 @@ $(function () {
         $.each(operation.responses, function (code, response) {
 
             if (typeof response.schema != 'undefined' && typeof response.schema.$ref != 'undefined') {
-                response.properties = buildProperties(response.schema.$ref, swagger.definitions, {}, '');
-                response.example = JSON.stringify(buildExample(response.schema.$ref, swagger.definitions, true), null, 4);
+              response.definitions = {};
+              buildDefinitions(response.schema.$ref, swagger.definitions, response.definitions);
+              response.example = JSON.stringify(buildExample(response.schema.$ref, swagger.definitions, true), null, 4);
             }
         });
       });
