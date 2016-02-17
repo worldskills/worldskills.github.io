@@ -30,3 +30,10 @@ Coding guidelines and best practices for code development.
 - You can use [JSCS](http://jscs.info/) to format your code
   - [linter-jscs](https://atom.io/packages/linter-jscs) for Atom
   - [jscs-fixer](https://atom.io/packages/jscs-fixer) for Atom (make sure you have a .jscsrc file with airbnb preset if using fixer)
+  - because of Airbnb style says max line length is 100 - you should use a *.jscsrc* configuration file to change this
+  ```JSON
+    {
+      "preset": "airbnb",
+      "maximumLineLength": 120
+    }
+  ```
