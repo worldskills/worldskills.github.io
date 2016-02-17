@@ -27,3 +27,6 @@ Coding guidelines and best practices for code development.
 ### JavaScript
 - Code should follow [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript).
 - Code must use 2 spaces for indenting.
+- You can use [JSCS](http://jscs.info/) to format your code
+  - [linter-jscs](https://atom.io/packages/linter-jscs) for Atom
+  - [jscs-fixer](https://atom.io/packages/jscs-fixer) for Atom
