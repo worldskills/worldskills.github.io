@@ -38,7 +38,7 @@
                             <h4>Request</h4>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-sm-6">
                                 {{#if pathParams.length}}
                                     <h5>Path parameters</h5>
                                     <table class="table table-bordered table-striped">
@@ -103,7 +103,7 @@
                                     </table>
                                 {{/each}}
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-sm-6">
                                 <h5>Example request with curl</h5>
 
                                 <pre><code>curl "{{#each ../../swagger.schemes}}{{this}}{{/each}}://{{../../swagger.host}}{{../../swagger.basePath}}{{path}}" \
@@ -119,7 +119,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-sm-6">
                                     {{#each definitions}}
                                         <h5>{{@key}}</h5>
 
@@ -143,7 +143,7 @@
                                         </table>
                                     {{/each}}
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-sm-6">
                                     <h5>Schema</h5>
 
                                     {{#if example}}
