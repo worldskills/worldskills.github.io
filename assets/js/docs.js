@@ -155,7 +155,7 @@ $(function () {
             if (typeof response.schema != 'undefined' && typeof response.schema.$ref != 'undefined') {
               response.definitions = {};
               buildDefinitions(response.schema.$ref, swagger.definitions, response.definitions);
-              response.example = JSON.stringify(buildExample(response.schema.$ref, swagger.definitions, true), null, 4);
+              response.example = JSON.stringify(buildExample(response.schema.$ref, swagger.definitions, true), null, 2);
             }
         });
       });
