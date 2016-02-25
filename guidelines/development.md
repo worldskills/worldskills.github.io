@@ -42,3 +42,12 @@ Coding guidelines and best practices for code development.
       "excludeFiles": ["**/*.js"]
     }
   ```
+
+### CSS
+- Code should follow [Code Guide by @mdo](http://codeguide.co/).
+- Code must use 2 spaces for indenting.
+
+### HTML
+- Code should follow [Code Guide by @mdo](http://codeguide.co/).
+- Code must use 2 spaces for indenting.
+- HTML attributes must use double quotes, never single quotes.
