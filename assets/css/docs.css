@@ -2,6 +2,10 @@ body {
 	position: relative;
 }
 
+footer {
+	padding-bottom: 70px
+}
+
 .sidebar .affix {
 	position: static;
 }
