@@ -15,19 +15,22 @@ $(function () {
           typeName = name;
           definitions[name] = definition;
 
-          $.each(definition.properties, function (name, property) {
-            if ($.inArray(name, definition.required) !== -1) {
-              property.required = true;
-            } else {
-              property.required = false;
-            }
-            if (typeof property.$ref != 'undefined') {
-              property.definition = buildDefinitions(property.$ref, all, definitions);
-            }
-            if (typeof property.items != 'undefined' && property.items.$ref != type) {
-              property.items.definition = buildDefinitions(property.items.$ref, all, definitions);
-            }
-          });
+          if (typeof definition.properties != 'undefined') {
+
+            $.each(definition.properties, function (name, property) {
+              if ($.inArray(name, definition.required) !== -1) {
+                property.required = true;
+              } else {
+                property.required = false;
+              }
+              if (typeof property.$ref != 'undefined') {
+                property.definition = buildDefinitions(property.$ref, all, definitions);
+              }
+              if (typeof property.items != 'undefined' && property.items.$ref != type) {
+                property.items.definition = buildDefinitions(property.items.$ref, all, definitions);
+              }
+            });
+          }
         }
       });
     }
@@ -61,23 +64,26 @@ $(function () {
 
         if ('#/definitions/' + name == type) {
 
-          $.each(definition.properties, function (name, property) {
+          if (typeof definition.properties != 'undefined') {
 
-            if (optional || $.inArray(name, definition.required) !== -1) {
-              if (typeof property.xml != 'undefined' && typeof property.xml.name != 'undefined') {
-                name = property.xml.name;
+            $.each(definition.properties, function (name, property) {
+
+              if (optional || $.inArray(name, definition.required) !== -1) {
+                if (typeof property.xml != 'undefined' && typeof property.xml.name != 'undefined') {
+                  name = property.xml.name;
+                }
+                if (typeof property.type != 'undefined') {
+                  example[name] = buildExample(property.type, definitions, optional);            
+                }
+                if (typeof property.$ref != 'undefined') {
+                  example[name] = buildExample(property.$ref, definitions, optional);
+                }
+                if (typeof property.items != 'undefined' && property.items.$ref != type) {
+                  example[name].push(buildExample(property.items.$ref, definitions, optional));
+                }
               }
-              if (typeof property.type != 'undefined') {
-                example[name] = buildExample(property.type, definitions, optional);            
-              }
-              if (typeof property.$ref != 'undefined') {
-                example[name] = buildExample(property.$ref, definitions, optional);
-              }
-              if (typeof property.items != 'undefined' && property.items.$ref != type) {
-                example[name].push(buildExample(property.items.$ref, definitions, optional));
-              }
-            }
-          });
+            });
+          }
         }
       });
     }
@@ -104,16 +110,19 @@ $(function () {
     $.each(swagger.paths, function (path, resource) {
 
       $.each(resource, function (method, operation) {
+        
+        if ($.isArray(operation.tags)) {
 
-        $.each(operation.tags, function (i, tagName) {
+          $.each(operation.tags, function (i, tagName) {
 
-            $.each(swagger.tags, function (j, tag) {
+              $.each(swagger.tags, function (j, tag) {
 
-                if (tag.name == tagName) {
-                    tag.operations.push(operation);
-                }
-            });
-        });
+                  if (tag.name == tagName) {
+                      tag.operations.push(operation);
+                  }
+              });
+          });
+        }
 
         operation.path = path;
         operation.method = method.toUpperCase();
