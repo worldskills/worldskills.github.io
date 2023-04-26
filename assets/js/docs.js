@@ -15,7 +15,7 @@ $(function () {
           typeName = name;
           definitions[name] = definition;
 
-          if (typeof definition.properties != 'undefined') {
+          if (typeof definition.properties != 'undefined' && definition.properties) {
 
             $.each(definition.properties, function (name, property) {
               if ($.inArray(name, definition.required) !== -1) {
@@ -23,7 +23,7 @@ $(function () {
               } else {
                 property.required = false;
               }
-              if (typeof property.$ref != 'undefined') {
+              if (typeof property.$ref != 'undefined' && property.$ref != type) {
                 property.definition = buildDefinitions(property.$ref, all, definitions);
               }
               if (typeof property.items != 'undefined' && property.items.$ref != type) {
@@ -64,7 +64,7 @@ $(function () {
 
         if ('#/definitions/' + name == type) {
 
-          if (typeof definition.properties != 'undefined') {
+          if (typeof definition.properties != 'undefined' && definition.properties) {
 
             $.each(definition.properties, function (name, property) {
 
@@ -75,7 +75,7 @@ $(function () {
                 if (typeof property.type != 'undefined') {
                   example[name] = buildExample(property.type, definitions, optional);            
                 }
-                if (typeof property.$ref != 'undefined') {
+                if (typeof property.$ref != 'undefined' && property.$ref != type) {
                   example[name] = buildExample(property.$ref, definitions, optional);
                 }
                 if (typeof property.items != 'undefined' && property.items.$ref != type) {
