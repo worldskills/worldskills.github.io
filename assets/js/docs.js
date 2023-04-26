@@ -69,7 +69,7 @@ $(function () {
             $.each(definition.properties, function (name, property) {
 
               if (optional || $.inArray(name, definition.required) !== -1) {
-                if (typeof property.xml != 'undefined' && typeof property.xml.name != 'undefined') {
+                if (typeof property.xml != 'undefined' && property.xml && typeof property.xml.name != 'undefined') {
                   name = property.xml.name;
                 }
                 if (typeof property.type != 'undefined') {
@@ -110,63 +110,64 @@ $(function () {
     $.each(swagger.paths, function (path, resource) {
 
       $.each(resource, function (method, operation) {
-        
-        if ($.isArray(operation.tags)) {
+        if (operation) {
+          if (typeof operation.tags !== 'undefined' && $.isArray(operation.tags)) {
 
-          $.each(operation.tags, function (i, tagName) {
+            $.each(operation.tags, function (i, tagName) {
 
-              $.each(swagger.tags, function (j, tag) {
+                $.each(swagger.tags, function (j, tag) {
 
-                  if (tag.name == tagName) {
-                      tag.operations.push(operation);
-                  }
-              });
+                    if (tag.name == tagName) {
+                        tag.operations.push(operation);
+                    }
+                });
+            });
+          }
+
+          operation.path = path;
+          operation.method = method.toUpperCase();
+
+          operation.label = 'default';
+          if (method == 'get') {
+            operation.label = 'success';
+          }
+          if (method == 'post') {
+            operation.label = 'info';
+          }
+          if (method == 'put') {
+            operation.label = 'warning';
+          }
+          if (method == 'delete') {
+            operation.label = 'danger';
+          }
+
+          operation.id = sanitize(path + ' ' + operation.operationId);
+
+          operation.queryParams = [];
+          operation.pathParams = [];
+          $.each(operation.parameters, function (i, parameter) {
+            if (parameter.in == 'query') {
+              operation.queryParams.push(parameter);
+            }
+            if (parameter.in == 'path') {
+              operation.pathParams.push(parameter);
+            }
+            if (parameter.in == 'body') {
+              operation.definitions = {};
+              buildDefinitions(parameter.schema.$ref, swagger.definitions, operation.definitions);
+              operation.example = JSON.stringify(buildExample(parameter.schema.$ref, swagger.definitions, false));
+            }
+          });
+
+          $.each(operation.responses, function (code, response) {
+
+              if (typeof response.schema != 'undefined' && response.schema && typeof response.schema.$ref != 'undefined') {
+                response.definitions = {};
+                buildDefinitions(response.schema.$ref, swagger.definitions, response.definitions);
+                response.example = JSON.stringify(buildExample(response.schema.$ref, swagger.definitions, true), null, 2);
+              }
           });
         }
-
-        operation.path = path;
-        operation.method = method.toUpperCase();
-
-        operation.label = 'default';
-        if (method == 'get') {
-          operation.label = 'success';
-        }
-        if (method == 'post') {
-          operation.label = 'info';
-        }
-        if (method == 'put') {
-          operation.label = 'warning';
-        }
-        if (method == 'delete') {
-          operation.label = 'danger';
-        }
-
-        operation.id = sanitize(path + ' ' + operation.operationId);
-
-        operation.queryParams = [];
-        operation.pathParams = [];
-        $.each(operation.parameters, function (i, parameter) {
-          if (parameter.in == 'query') {
-            operation.queryParams.push(parameter);
-          }
-          if (parameter.in == 'path') {
-            operation.pathParams.push(parameter);
-          }
-          if (parameter.in == 'body') {
-            operation.definitions = {};
-            buildDefinitions(parameter.schema.$ref, swagger.definitions, operation.definitions);
-            operation.example = JSON.stringify(buildExample(parameter.schema.$ref, swagger.definitions, false));
-          }
-        });
-
-        $.each(operation.responses, function (code, response) {
-
-            if (typeof response.schema != 'undefined' && typeof response.schema.$ref != 'undefined') {
-              response.definitions = {};
-              buildDefinitions(response.schema.$ref, swagger.definitions, response.definitions);
-              response.example = JSON.stringify(buildExample(response.schema.$ref, swagger.definitions, true), null, 2);
-            }
-        });
       });
     });
 
