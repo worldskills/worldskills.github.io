@@ -2,7 +2,7 @@
   "name": "worldskills-developers",
   "dependencies": {
     "jquery": "~1.10.2",
-    "worldskills-bootstrap": "*",
+    "worldskills-bootstrap": "v3.3.7.2",
     "handlebars": "~2.0.0"
   }
 }

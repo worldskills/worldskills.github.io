@@ -12,17 +12,15 @@
     "web"
   ],
   "homepage": "http://getbootstrap.com",
+  "license": "MIT",
+  "moduleType": "globals",
   "main": [
-    "less/bootstrap.less",
-    "dist/css/bootstrap.css",
     "dist/js/bootstrap.js",
-    "dist/fonts/glyphicons-halflings-regular.eot",
-    "dist/fonts/glyphicons-halflings-regular.svg",
-    "dist/fonts/glyphicons-halflings-regular.ttf",
-    "dist/fonts/glyphicons-halflings-regular.woff"
+    "dist/css/bootstrap.css",
+    "less/bootstrap.less"
   ],
   "ignore": [
-    ".*",
+    "/.*",
     "_config.yml",
     "CNAME",
     "composer.json",
@@ -32,15 +30,15 @@
     "test-infra"
   ],
   "dependencies": {
-    "jquery": ">= 1.9.0"
+    "jquery": "1.9.1 - 3"
   },
-  "_release": "8348b68ec9",
+  "_release": "v3.3.7.2",
   "_resolution": {
-    "type": "branch",
-    "branch": "master",
-    "commit": "8348b68ec9f5e950d544ab39952f6e664e471a5d"
+    "type": "tag",
+    "tag": "v3.3.7.2",
+    "commit": "0809d3daeaec9970fc02fb6bf29ae68e727d1d16"
   },
-  "_source": "git://github.com/worldskills/bootstrap.git",
-  "_target": "*",
+  "_source": "https://github.com/worldskills/bootstrap.git",
+  "_target": "v3.3.7.2",
   "_originalSource": "worldskills-bootstrap"
 }
