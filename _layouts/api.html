@@ -130,9 +130,9 @@
                                                 <col width="70%" />
                                             </colgroup>
                                             <tbody>
-                                                {{#each properties}}
+                                                {{#each propertiesSorted}}
                                                     <tr>
-                                                        <td><code>{{#if xml.name}}{{xml.name}}{{else}}{{@key}}{{/if}}</code></td>
+                                                        <td><code>{{#if xml.name}}{{xml.name}}{{else}}{{key}}{{/if}}</code></td>
                                                         <td>
                                                             {{type}}{{#if format}} ({{format}}){{/if}}{{#if definition}}{{definition}}{{/if}}{{#if items.definition}}[{{items.definition}}]{{/if}}{{#if pattern}} ({{pattern}}){{/if}}
                                                             {{#if required}}<span class="label label-default">required</span>{{/if}}<br/>

@@ -17,6 +17,8 @@ $(function () {
 
           if (typeof definition.properties != 'undefined' && definition.properties) {
 
+            definition.propertiesSorted = [];
+
             $.each(definition.properties, function (name, property) {
               if ($.inArray(name, definition.required) !== -1) {
                 property.required = true;
@@ -29,6 +31,29 @@ $(function () {
               if (typeof property.items != 'undefined' && property.items.$ref != type) {
                 property.items.definition = buildDefinitions(property.items.$ref, all, definitions);
               }
+
+              property.key = name;
+              definition.propertiesSorted.push(property);
+            });
+
+            // sort properties by position attribute
+            definition.propertiesSorted.sort(function (a, b) {
+              if (a.position === b.position) {
+                  return 0;
+              }
+              if (a.position === null) {
+                  return 1;
+              }
+              if (b.position === null) {
+                  return -1;
+              }
+              if (a.position < b.position) {
+                return -1;
+              }
+              if (a.position > b.position) {
+                return 1;
+              }
+              return 0;
             });
           }
         }
@@ -64,9 +89,11 @@ $(function () {
 
         if ('#/definitions/' + name == type) {
 
-          if (typeof definition.properties != 'undefined' && definition.properties) {
+          if (typeof definition.propertiesSorted != 'undefined' && definition.propertiesSorted) {
 
-            $.each(definition.properties, function (name, property) {
+            $.each(definition.propertiesSorted, function (index, property) {
+
+              var name = property.key;
 
               if (optional || $.inArray(name, definition.required) !== -1) {
                 if (typeof property.xml != 'undefined' && property.xml && typeof property.xml.name != 'undefined') {
