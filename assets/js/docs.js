@@ -73,13 +73,16 @@ $(function () {
                   name = property.xml.name;
                 }
                 if (typeof property.type != 'undefined') {
-                  example[name] = buildExample(property.type, definitions, optional);            
+                  example[name] = buildExample(property.type, definitions, optional);
                 }
                 if (typeof property.$ref != 'undefined' && property.$ref != type) {
                   example[name] = buildExample(property.$ref, definitions, optional);
                 }
                 if (typeof property.items != 'undefined' && property.items.$ref != type) {
                   example[name].push(buildExample(property.items.$ref, definitions, optional));
+                }
+                if (property.example) {
+                  example[name] = property.example;
                 }
               }
             });
