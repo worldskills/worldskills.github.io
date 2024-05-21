@@ -73,6 +73,7 @@
                                                         {{type}}{{#if format}} ({{format}}){{/if}}{{#if default}}, default is {{default}}{{/if}}{{#if required}} <span class="label label-default">required</span>{{/if}}<br/>
                                                         <span class="text-muted">
                                                             {{description}}{{#if enum}}, can be {{#each enum}} <em>{{this}}</em>{{#if @last}}{{else}},{{/if}}{{/each}}.{{/if}}
+                                                            {{#if x-example}}<br>example: {{x-example}}{{/if}}
                                                         </span>
                                                     </td>
                                                 </tr>
