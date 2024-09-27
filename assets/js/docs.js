@@ -13,48 +13,53 @@ $(function () {
         if ('#/definitions/' + name == type) {
 
           typeName = name;
-          definitions[name] = definition;
 
-          if (typeof definition.properties != 'undefined' && definition.properties) {
+          // Check if the definition has already been processed
+          if (!definitions[name]) {
 
-            definition.propertiesSorted = [];
+            definitions[name] = definition;
 
-            $.each(definition.properties, function (name, property) {
-              if ($.inArray(name, definition.required) !== -1) {
-                property.required = true;
-              } else {
-                property.required = false;
-              }
-              if (typeof property.$ref != 'undefined' && property.$ref != type) {
-                property.definition = buildDefinitions(property.$ref, all, definitions);
-              }
-              if (typeof property.items != 'undefined' && property.items.$ref != type) {
-                property.items.definition = buildDefinitions(property.items.$ref, all, definitions);
-              }
+            if (typeof definition.properties != 'undefined' && definition.properties) {
 
-              property.key = name;
-              definition.propertiesSorted.push(property);
-            });
+              definition.propertiesSorted = [];
 
-            // sort properties by position attribute
-            definition.propertiesSorted.sort(function (a, b) {
-              if (a.position === b.position) {
-                  return 0;
-              }
-              if (a.position === null) {
-                  return 1;
-              }
-              if (b.position === null) {
+              $.each(definition.properties, function (name, property) {
+                if ($.inArray(name, definition.required) !== -1) {
+                  property.required = true;
+                } else {
+                  property.required = false;
+                }
+                if (typeof property.$ref != 'undefined' && property.$ref != type) {
+                  property.definition = buildDefinitions(property.$ref, all, definitions);
+                }
+                if (typeof property.items != 'undefined' && property.items.$ref != type) {
+                  property.items.definition = buildDefinitions(property.items.$ref, all, definitions);
+                }
+
+                property.key = name;
+                definition.propertiesSorted.push(property);
+              });
+
+              // sort properties by position attribute
+              definition.propertiesSorted.sort(function (a, b) {
+                if (a.position === b.position) {
+                    return 0;
+                }
+                if (a.position === null) {
+                    return 1;
+                }
+                if (b.position === null) {
+                    return -1;
+                }
+                if (a.position < b.position) {
                   return -1;
-              }
-              if (a.position < b.position) {
-                return -1;
-              }
-              if (a.position > b.position) {
-                return 1;
-              }
-              return 0;
-            });
+                }
+                if (a.position > b.position) {
+                  return 1;
+                }
+                return 0;
+              });
+            }
           }
         }
       });
@@ -63,7 +68,7 @@ $(function () {
     return typeName;
   }
 
-  function buildExample(type, definitions, optional) {
+  function buildExample(type, definitions, optional, typeStack = []) {
 
     if (type == 'string') {
       return '';
@@ -89,6 +94,11 @@ $(function () {
 
         if ('#/definitions/' + name == type) {
 
+          if (typeStack.includes(type)) {
+            return ''; // Prevent endless loop by returning an empty object
+          }
+          typeStack.push(type);
+
           if (typeof definition.propertiesSorted != 'undefined' && definition.propertiesSorted) {
 
             $.each(definition.propertiesSorted, function (index, property) {
@@ -100,20 +110,26 @@ $(function () {
                   name = property.xml.name;
                 }
                 if (typeof property.type != 'undefined') {
-                  example[name] = buildExample(property.type, definitions, optional);
+                  example[name] = buildExample(property.type, definitions, optional, typeStack);
                 }
                 if (typeof property.$ref != 'undefined' && property.$ref != type) {
-                  example[name] = buildExample(property.$ref, definitions, optional);
+                  example[name] = buildExample(property.$ref, definitions, optional, typeStack);
                 }
                 if (typeof property.items != 'undefined' && property.items.$ref != type) {
-                  example[name].push(buildExample(property.items.$ref, definitions, optional));
+                  example[name] = [buildExample(property.items.$ref, definitions, optional, typeStack)];
                 }
                 if (property.example) {
-                  example[name] = property.example;
+                  try {
+                    example[name] = JSON.parse(property.example);
+                  } catch (e) {
+                    example[name] = property.example;
+                  }
                 }
               }
             });
           }
+
+          typeStack.pop(); // Remove the type from the stack after processing
         }
       });
     }
