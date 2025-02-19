@@ -201,7 +201,7 @@ $(function () {
             if (parameter.in == 'body') {
               operation.definitions = {};
               buildDefinitions(parameter.schema.$ref, swagger.definitions, operation.definitions);
-              operation.example = JSON.stringify(buildExample(parameter.schema.$ref, swagger.definitions, false));
+              operation.example = JSON.stringify(buildExample(parameter.schema.$ref, swagger.definitions, parameter.required));
             }
           });
 
