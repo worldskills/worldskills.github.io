@@ -30,6 +30,11 @@ footer {
 	}
 }
 
+.ws-content p,
+.ws-content pre {
+	max-width: 52em;
+}
+
 pre {
     overflow-x: auto;
 }
