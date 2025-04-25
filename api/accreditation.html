@@ -14,31 +14,40 @@ api_docs: https://api.worldskills.org/accreditation/swagger.json
 
 		<ul class="list-unstyled" data-spy="affix"
 			data-offset-top="264">
-			<li class="active"><a href="#description">Description</a></li>
+			<li class="active"><a href="#introduction">Introduction</a></li>
 		</ul>
 
 	</div>
-	<div class="col-md-9" id="description">
+	<div class="col-md-9">
 
-		<div class="row">
-			<div class="col-md-6">
-				<h2 id="responsibilities">Responsibilities</h2>
-				<p>This API is responsible for managing accreditation data for a WorldSkills event.</p>
-		
-				<h2>Authentication</h2>
-				<p>If the resource requires authorization, a Bearer access token needs to be sent with the Authorization header:</p>
-				<pre><code>GET /accreditation HTTP/1.1
+		<div  id="introduction" class="ws-content">
+			<h3 id="overview">Overview</h3>
+			<p>This API is responsible for managing accreditation data for a WorldSkills event.</p>
+
+			<h3>Authentication</h3>
+			<p>If the resource requires authorization, a Bearer access token needs to be sent with the Authorization header:</p>
+			<pre><code>GET /accreditation HTTP/1.1
 Authorization: Bearer ABCD-EFGH-1234-5678</code></pre>
-			</div>
-			<div class="col-md-6">
-				<h2 id="key-concepts">Key Concepts</h2>
-		
-				<p>Zones define certain areas or services to which people can have access to. An accreditation can have multiple zones.</p>
-		
-				<p>Delegate types are used to categorize People - each delegate type has a certain color and default zones. A delegate type might be called "sub-category" in the accreditation matrix.</p>
 
+			<h3 id="key-concepts">Key Concepts</h3>
 
-			</div>
+			<p>Zones define certain areas or services to which people can have access to. An accreditation can have multiple zones.</p>
+
+			<p>Delegate types are used to categorize People - each delegate type has a certain color and default zones. A delegate type might be called "sub-category" in the accreditation matrix.</p>
+
+			<h3>Accreditation Sync</h3>
+
+			<p>The Sync endpoint can be used to synchronize accreditation data to a different system and make sure the information is up-to-date. An initial sync can be done to fetch all accreditations:</p>
+
+			<pre><code>GET /accreditation/events/12345/sync HTTP/1.1
+Authorization: Bearer ABCD-EFGH-1234-5678
+Accept: application/json</code></pre>
+
+			<p>To keep the data up-to-date, the sync can then be called every 2 minutes to fetch only the changes since the last sync. The last sync time is passed as a timestamp with the query parameter `since`. To make sure no changes are missed, the current time minus 3 minutes can be used for the parameter `since`. e.g. at 15:08 the following call would be made:</p>
+			<pre><code>GET /accreditation/events/12345/sync?since=2025-04-10T15:05:00Z HTTP/1.1
+Authorization: Bearer ABCD-EFGH-1234-5678
+Accept: application/json</code></pre>
+
 		</div>
 
 		<hr />
