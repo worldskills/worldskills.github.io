@@ -6,71 +6,81 @@ api_docs: https://api.worldskills.org/accreditation/swagger.json
 ---
 
 <div class="page-header">
-	<h1>Accreditation <small>WorldSkills API</small></h1>
+    <h1>Accreditation <small>WorldSkills API</small></h1>
 </div>
 
 <div class="row">
-	<div class="col-md-3 sidebar" role="navigation">
+    <div class="col-md-3 sidebar" role="navigation">
 
-		<ul class="list-unstyled" data-spy="affix"
-			data-offset-top="264">
-			<li class="active"><a href="#introduction">Introduction</a></li>
-		</ul>
+        <ul class="list-unstyled" data-spy="affix"
+            data-offset-top="264">
+            <li class="active"><a href="#introduction">Introduction</a></li>
+        </ul>
 
-	</div>
-	<div class="col-md-9">
+    </div>
+    <div class="col-md-9">
 
-		<div  id="introduction" class="ws-content">
-			<h3 id="overview">Overview</h3>
-			<p>This API is responsible for managing accreditation data for a WorldSkills event.</p>
+        <div  id="introduction" class="ws-content">
+            <h3 id="overview">Overview</h3>
+            <p>This API is responsible for managing accreditation data for a WorldSkills event.</p>
 
-			<h3>Authentication</h3>
-			<p>If the resource requires authorization, a Bearer access token needs to be sent with the Authorization header:</p>
-			<pre><code>GET /accreditation HTTP/1.1
-Authorization: Bearer ABCD-EFGH-1234-5678</code></pre>
+            <h3>Authentication</h3>
+            <p>If the resource requires authorization, a Bearer access token needs to be sent with the Authorization header:</p>
+            <pre><code>curl "https://api.worldskills.org/accreditation" \
+  -H "Authorization: Bearer ABCD-EFGH-1234-5678"</code></pre>
 
-			<h3 id="key-concepts">Key Concepts</h3>
+            <h3 id="key-concepts">Key Concepts</h3>
 
-			<p>Zones define certain areas or services to which people can have access to. An accreditation can have multiple zones.</p>
+            <p>Zones define certain areas or services to which people can have access to. An accreditation can have multiple zones.</p>
 
-			<p>Delegate types are used to categorize People - each delegate type has a certain color and default zones. A delegate type might be called "sub-category" in the accreditation matrix.</p>
+            <p>Delegate types are used to categorize People - each delegate type has a certain color and default zones. A delegate type might be called "sub-category" in the accreditation matrix.</p>
 
-			<h3>Accreditation Sync</h3>
+			<p>Each event has a unique ID that needs to be used in the API URL. The following examples use the `eventId` 12345 which needs to be replaced before using the API.</p>
 
-			<p>The Sync endpoint can be used to synchronize accreditation data to a different system and make sure the information is up-to-date. An initial sync can be done to fetch all accreditations:</p>
+            <h3>Accreditation Sync</h3>
 
-			<pre><code>GET /accreditation/events/12345/sync HTTP/1.1
-Authorization: Bearer ABCD-EFGH-1234-5678
-Accept: application/json</code></pre>
+            <p>The Sync endpoint can be used to synchronize accreditation data to a different system and make sure the information is up-to-date. An initial sync can be done to fetch all accreditations:</p>
 
-			<p>To keep the data up-to-date, the sync can then be called every 2 minutes to fetch only the changes since the last sync. The last sync time is passed as a timestamp with the query parameter `since`. To make sure no changes are missed, the current time minus 3 minutes can be used for the parameter `since`. e.g. at 15:08 the following call would be made:</p>
-			<pre><code>GET /accreditation/events/12345/sync?since=2025-04-10T15:05:00Z HTTP/1.1
-Authorization: Bearer ABCD-EFGH-1234-5678
-Accept: application/json</code></pre>
+            <pre><code>curl "https://api.worldskills.org/accreditation/events/12345/sync" \
+  -H "Authorization: Bearer ABCD-EFGH-1234-5678" \
+  -H "Accept: application/json"</code></pre>
 
-			<h3>Send Scans</h3>
+            <p>To keep the data up-to-date, the sync can then be called every 2 minutes to fetch only the changes since the last sync. The last sync time is passed as a timestamp with the query parameter `since`. To make sure no changes are missed, the current time minus 3 minutes can be used for the parameter `since`. e.g. at 15:08 the following call would be made:</p>
+            <pre><code>curl "https://api.worldskills.org/accreditation/events/12345/sync?since=2025-04-10T15:05:00Z" \
+  -H "Authorization: Bearer ABCD-EFGH-1234-5678" \
+  -H "Accept: application/json"</code></pre>
 
-			<p>If accreditations are scanned by a different system as part of access control, each scan should be sent to the Accreditation API for reporting. Scans don't need to be sent in realtime, but within 5 latest.</p>
+            <h3>Send Scans</h3>
 
-			<p>Each scan consists of the accreditation, a timestamp of the scan, the zone for which was scanned, and if the access was allowed.</p>
+            <p>If accreditations are scanned by a different system as part of access control, each scan should be sent to the Accreditation API for reporting. Scans don't need to be sent in realtime, but within 5 latest.</p>
 
-			<pre><code>POST /accreditation/events/12345/scan HTTP/1.1
-Authorization: Bearer ABCD-EFGH-1234-5678
-Accept: application/json
-Content-Type: application/json
+            <p>Each scan consists of the accreditation, a timestamp of the scan, the zone for which was scanned, and if the access was allowed.</p>
 
-{
-  "accreditation_id": 98765,
-  "zone_id": 123,
-  "allowed": true,
-  "timestamp": "2025-04-10T15:08:00Z"
-}</code></pre>
-		</div>
+            <pre><code>curl -X POST \
+  "http://localhost:8080/accreditation/events/12345/scan" \
+  -H "Authorization: Bearer ABCD-EFGH-1234-5678" \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "accreditation_id": 98765,
+    "zone_id": 123,
+    "allowed": true,
+    "timestamp": "2025-04-20T09:21:00Z"
+  }'</code></pre>
 
-		<hr />
+  			<h3>Fetch Zones</h3>
 
-		<div id="api">
-			<p>Loading API reference…</p>
-		</div>
-	</div>
+			<p>Available zones can be fetched by calling the following endpoint:</p>
+
+			<pre><code>curl "https://api.worldskills.org/accreditation/events/12345/zones" \
+  -H "Authorization: Bearer ABCD-EFGH-1234-5678" \
+  -H "Accept: application/json"</code></pre>
+        </div>
+
+        <hr />
+
+        <div id="api">
+            <p>Loading API reference…</p>
+        </div>
+    </div>
 </div>
