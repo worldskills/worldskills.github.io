@@ -48,6 +48,23 @@ Accept: application/json</code></pre>
 Authorization: Bearer ABCD-EFGH-1234-5678
 Accept: application/json</code></pre>
 
+			<h3>Send Scans</h3>
+
+			<p>If accreditations are scanned by a different system as part of access control, each scan should be sent to the Accreditation API for reporting. Scans don't need to be sent in realtime, but within 5 latest.</p>
+
+			<p>Each scan consists of the accreditation, a timestamp of the scan, the zone for which was scanned, and if the access was allowed.</p>
+
+			<pre><code>POST /accreditation/events/12345/scan HTTP/1.1
+Authorization: Bearer ABCD-EFGH-1234-5678
+Accept: application/json
+Content-Type: application/json
+
+{
+  "accreditation_id": 98765,
+  "zone_id": 123,
+  "allowed": true,
+  "timestamp": "2025-04-10T15:08:00Z"
+}</code></pre>
 		</div>
 
 		<hr />
