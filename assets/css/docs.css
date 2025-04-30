@@ -30,9 +30,12 @@ footer {
 	}
 }
 
-.ws-content p,
-.ws-content pre {
+.ws-content p {
 	max-width: 52em;
+}
+
+.ws-content pre {
+	max-width: 60em;
 }
 
 pre {
