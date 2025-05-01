@@ -1,13 +1,13 @@
 body {
-	position: relative;
+  position: relative;
 }
 
 footer {
-	padding-bottom: 70px
+  padding-bottom: 70px
 }
 
 .sidebar .affix {
-	position: static;
+  position: static;
 }
 
 .sidebar li {
@@ -17,33 +17,33 @@ footer {
 }
 
 @media (min-width: 992px) {
-	.sidebar .affix {
-		position: fixed;
-		top: 20px;
-		width: 213px;
-	}
+  .sidebar .affix {
+    position: fixed;
+    top: 20px;
+    width: 213px;
+  }
 }
 
 @media (min-width: 1200px) {
-	.sidebar .affix {
-		width: 263px;
-	}
+  .sidebar .affix {
+    width: 263px;
+  }
 }
 
 .ws-content p,
 .ws-content .alert {
-	max-width: 52em;
+  max-width: 52em;
 }
 
 .ws-content pre {
-	max-width: 60em;
+  max-width: 60em;
 }
 
 pre {
-    overflow-x: auto;
+  overflow-x: auto;
 }
 
 pre code {
-    overflow-wrap: normal;
-    white-space: pre;
+  overflow-wrap: normal;
+  white-space: pre;
 }
