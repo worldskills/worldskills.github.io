@@ -20,17 +20,17 @@ api_docs: https://api.worldskills.org/people/swagger.json
     </div>
     <div class="col-md-9" id="description">
 
-        <div  id="introduction" class="ws-content">
-            <h2>Introduction</h2>
+        <div class="ws-content">
+            <h3 id="introduction" class="align-top">Introduction</h3>
             <p>This API is responsible for storing WorldSkills people. A person can have multiple positions.</p>
             <div class="alert alert-warning" role="alert"><strong>Flag Warning!</strong> Please ensure that only officially approved flags of WorldSkills Member countries/regions are used. Avoid using flag images from existing libraries or emoji flags.</div>
 
-            <h2>Authentication</h2>
+            <h3>Authentication</h3>
             <p>If the resource requires authorization, a Bearer access token needs to be sent with the Authorization header. The token can be obtained through the <a href="../#authentication">authentication process</a>.</p>
             <pre><code>curl "https://api.worldskills.org/people" \
   -H "Authorization: Bearer ABCD-EFGH-1234-5678"</code></pre>
 
-            <h2>Uploading Person Image</h2>
+            <h3>Uploading Person Image</h3>
 
             <p>First upload the image to the <a href="/api/images/">Images API</a>:</p>
 
