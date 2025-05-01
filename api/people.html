@@ -14,23 +14,75 @@ api_docs: https://api.worldskills.org/people/swagger.json
 
         <ul class="list-unstyled" data-spy="affix"
             data-offset-top="264">
-            <li class="active"><a href="#description">Description</a></li>
+            <li class="active"><a href="#introduction">Introduction</a></li>
         </ul>
 
     </div>
     <div class="col-md-9" id="description">
 
-        <div class="row">
-            <div class="col-md-6">
-                <h2 id="responsibilities">Responsibilities</h2>
-                <p>This API is responsible for storing WorldSkills people.</p>
-                <div class="alert alert-warning" role="alert"><strong>Flag Warning!</strong> Please ensure that only officially approved flags of WorldSkills Member countries/regions are used. Avoid using flag images from existing libraries or emoji flags.</div>
-            </div>
-            <div class="col-md-6">
-                <h2 id="key-concepts">Key Concepts</h2>
+        <div  id="introduction" class="ws-content">
+            <h2 id="overview">Overview</h2>
+            <p>This API is responsible for storing WorldSkills people. A person can have multiple positions.</p>
+            <div class="alert alert-warning" role="alert"><strong>Flag Warning!</strong> Please ensure that only officially approved flags of WorldSkills Member countries/regions are used. Avoid using flag images from existing libraries or emoji flags.</div>
 
-                <p>A person can have multiple positions.</p>
-            </div>
+            <h2>Authentication</h2>
+            <p>If the resource requires authorization, a Bearer access token needs to be sent with the Authorization header:</p>
+            <pre><code>curl "https://api.worldskills.org/people" \
+  -H "Authorization: Bearer ABCD-EFGH-1234-5678"</code></pre>
+
+            <h2>Uploading Person Image</h2>
+
+            <p>First upload the image to the <a href="/api/images/">Images API</a>:</p>
+
+            <pre><code>curl -X POST \
+  "https://api.worldskills.org/images" \
+  -H "Authorization: Bearer ABCD-EFGH-1234-5678"
+  -H "Accept: application/json"
+  -H 'Content-Type: multipart/form-data; charset=utf-8; boundary=__BOUNDARY__' \
+  -F "file=@photo.jpg"</code></pre>
+
+
+            <p>This will return the image ID and its thumbnail hash which will be used later.</p>
+
+            <pre><code>{
+  "id": 98765,
+  "filename": "photo.jpg",
+  "width": 600,
+  "height": 800,
+  "size": 20000,
+  "thumbnail_hash": "9d7e4d20-3dad-4a07-8a18-ac5a2044474d",
+  "type": "image/jpeg"
+}</code></pre>
+
+            <p>Then find the person ID by searching with their email address:</p>
+
+            <pre><code>curl "https://people/person/autocomplete?e=clark.kent%40example.org" \
+  -H "Authorization: Bearer ABCD-EFGH-1234-5678" \
+  -H "Accept: application/json"</code></pre>
+
+            <p>The response contains the Person ID which can be used in the following requests.</p>
+
+            <pre><code>{
+  "people": [
+    {
+      "id": 123456,
+      "first_name": "Clark",
+      "last_name": "Vogler",
+      "email": "clark.kent@example.org",
+      "gender": null,
+      "date_of_birth": null
+    }
+  ]
+}</code></pre>
+
+            <p>Finally assign the uploaded image to the person with the image type TEAM:</p>
+
+            <pre><code>curl -X POST \
+  "https://api.worldskills.org/people/person/123456/image" \
+  -H "Authorization: Bearer ABCD-EFGH-1234-5678" \
+  -H "Accept: application/json" \
+  -H 'Content-Type: application/json' \
+  -d '{"image_id": 98765, "thumbnail_hash": "9d7e4d20-3dad-4a07-8a18-ac5a2044474d","type":"TEAM"}'</code></pre>
         </div>
 
         <hr />

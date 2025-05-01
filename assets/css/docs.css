@@ -30,7 +30,8 @@ footer {
 	}
 }
 
-.ws-content p {
+.ws-content p,
+.ws-content .alert {
 	max-width: 52em;
 }
 
