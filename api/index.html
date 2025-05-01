@@ -8,9 +8,50 @@ breadcrumb: API
 	<h1>WorldSkills API</h1>
 </div>
 
+<div class="ws-content">
+
 <h2>Introduction</h2>
 
-<p>The WorldSkills API is available to all WorldSkills Members.</p>
+<p>The WorldSkills API provides access to various resources related to WorldSkills events, people, and organizations. It is available to all WorldSkills Members. This documentation lists the available endpoints and how to use them.</p>
+
+<h2 id="authentication">Authentication</h2>
+
+<p>To access the API, a Bearer token is required for authentication. A token can be obtained with the <a href="https://oauth.net/2/" target="_blank">OAuth 2.0</a> protocol. Each application needs a client ID and a client secret. Contact the WorldSkills International IT team to obtain these credentials.</p>
+
+<h3>Implicit Flow</h3>
+
+<p>The simplest authentication flow implementation is with the Implicit grant type - send the user to the following authorization URL:</p>
+
+<pre><code>https://auth.worldskills.org/oauth/authorize?response_type=token&client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI</code></pre>
+
+<p>Once the user has logged in and authorized the application, they will be redirected to the redirect URI with the access token in the URL fragment:</p>
+
+<pre><code>https://example.org/callback#access_token=ABCD-EFGH-1234-5678</code></pre>
+
+<h3>Authorization Code Flow</h3>
+
+<p>The alternative Authorization Code grant type requires the application to exchange the authorization code for an access token:</p>
+
+<pre><code>https://auth.worldskills.org/oauth/authorize?response_type=code&client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI</code></pre>
+
+<p>An authorization code is returned to the redirect URI:</p>
+
+<pre><code>https://example.org/callback?code=1234567890</code></pre>
+
+<p>Then the application can exchange the authorization code for an access token, note that the client ID and the client secret need to be sent as Basic authentication header:</p>
+
+<pre><code>curl -X POST \
+  "https://api.worldskills.org/auth/access_token" \
+  -H "Authorization: Basic BASE64(CLIENT_ID:CLIENT_SECRET)" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=authorization_code&code=1234567890&redirect_uri=YOUR_REDIRECT_URI"</code></pre>
+
+<p>The response will contain the access token:</p>
+
+<pre><code>{
+  "access_token": "ABCD-EFGH-1234-5678",
+  "token_type": "Bearer"
+}</code></pre>
 
 <h2>API Reference</h2>
 
@@ -24,3 +65,5 @@ breadcrumb: API
 	<li><a href="/api/accreditation">Accreditation</a></li>
 	<li><a href="/api/registrations">Registrations</a></li>
 </ul>
+
+</div>
