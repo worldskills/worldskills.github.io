@@ -26,6 +26,9 @@
                     <div class="panel-heading">
                         <h3 class="panel-title" id="{{id}}">
                             <span class="label label-{{label}}">{{method}}</span> {{../../swagger.basePath}}{{path}}
+                            {{#if security.length}}
+                                <span class="glyphicon glyphicon-lock pull-right" title="Requires authentication"></span>
+                            {{/if}}
                         </h3>
                     </div>
 
