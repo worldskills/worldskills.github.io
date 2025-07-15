@@ -30,6 +30,33 @@ api_docs: https://api.worldskills.org/people/swagger.json
             <pre><code>GET /people HTTP/1.1
 Authorization: Bearer ABCD-EFGH-1234-5678</code></pre>
 
+            <h3>Person Image Types</h3>
+
+            <p>A person can have multiple images, one of each type:</p>
+
+            <table class="table table-bordered table-striped" >
+                <thead>
+                    <tr>
+                        <th>Image type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>TEAM</code></td>
+                        <td>Official team photo of a person (for international Competitors often with their national flag in the background).</td>
+                    </tr>
+                    <tr>
+                        <td><code>ACCREDITATION</code></td>
+                        <td>Usually used if there are special requirements from accreditation, e.g. if a clear background or a photo with a neutral expression is needed.</td>
+                    </tr>
+                    <tr>
+                        <td><code>PERSONAL</code></td>
+                        <td>Can be uploaded by the person themselves.</td>
+                    </tr>
+                </tbody>
+            </table>
+
             <h3>Uploading Person Image</h3>
 
             <p>First upload the image to the <a href="/api/images/">Images API</a>:</p>
