@@ -42,12 +42,12 @@ Authorization: Bearer ABCD-EFGH-1234-5678</code></pre>
 
                 <p>The Sync endpoint can be used to synchronize accreditation data to a different system and make sure the information is up-to-date. An initial sync can be done to fetch all accreditations:</p>
 
-                <pre><code>curl "https://api.worldskills.org/accreditation/events/12345/sync" \
+                <pre><code>curl "https://api.worldskills.org/registrations/accreditation/events/12345/sync" \
     -H "Authorization: Bearer ABCD-EFGH-1234-5678" \
     -H "Accept: application/json"</code></pre>
 
                 <p>To keep the data up-to-date, the sync can then be called every 2 minutes to fetch only the changes since the last sync. The last sync time is passed as a timestamp with the query parameter `since`. To make sure no changes are missed, the current time minus 3 minutes can be used for the parameter `since`. e.g. at 15:08 the following call would be made:</p>
-                <pre><code>curl "https://api.worldskills.org/accreditation/events/12345/sync?since=2025-04-10T15:05:00Z" \
+                <pre><code>curl "https://api.worldskills.org/registrations/accreditation/events/12345/sync?since=2025-04-10T15:05:00Z" \
     -H "Authorization: Bearer ABCD-EFGH-1234-5678" \
     -H "Accept: application/json"</code></pre>
 
@@ -58,7 +58,7 @@ Authorization: Bearer ABCD-EFGH-1234-5678</code></pre>
                 <p>Each scan consists of the accreditation, a timestamp of the scan, the zone for which was scanned, and if the access was allowed.</p>
 
                 <pre><code>curl -X POST \
-    "http://localhost:8080/accreditation/events/12345/scan" \
+    "https://api.worldskills.org/registrations/accreditation/events/12345/scan" \
     -H "Authorization: Bearer ABCD-EFGH-1234-5678" \
     -H "Accept: application/json" \
     -H "Content-Type: application/json" \
@@ -73,7 +73,7 @@ Authorization: Bearer ABCD-EFGH-1234-5678</code></pre>
 
                 <p>Available zones can be fetched by calling the following endpoint:</p>
 
-                <pre><code>curl "https://api.worldskills.org/accreditation/events/12345/zones" \
+                <pre><code>curl "https://api.worldskills.org/registrations/accreditation/events/12345/zones" \
     -H "Authorization: Bearer ABCD-EFGH-1234-5678" \
     -H "Accept: application/json"</code></pre>
             </div>
