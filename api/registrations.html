@@ -23,12 +23,59 @@ api_docs: https://api.worldskills.org/registrations/swagger.json
         <div class="row">
             <div class="col-md-6">
                 <h2 id="responsibilities">Responsibilities</h2>
-                <p>This API is responsible for managing registration data for a WorldSkills event.</p>
+                <p>This API is responsible for managing registration and accreditation data for a WorldSkills event.</p>
         
                 <h2>Authentication</h2>
                 <p>If the resource requires authorization, a Bearer access token needs to be sent with the Authorization header:</p>
                 <pre><code>GET /registrations HTTP/1.1
 Authorization: Bearer ABCD-EFGH-1234-5678</code></pre>
+
+                <h3 id="key-concepts">Key Concepts</h3>
+
+                <p>Zones define certain areas or services to which people can have access to. An accreditation can have multiple zones.</p>
+
+                <p>Positions are used to categorize People - each position has a certain color and default zones. A position might be called "sub-category" in the accreditation matrix.</p>
+
+                <p>Each event has a unique ID that needs to be used in the API URL. The following examples use the `eventId` 12345 which needs to be replaced before using the API.</p>
+
+                <h3>Accreditation Sync</h3>
+
+                <p>The Sync endpoint can be used to synchronize accreditation data to a different system and make sure the information is up-to-date. An initial sync can be done to fetch all accreditations:</p>
+
+                <pre><code>curl "https://api.worldskills.org/accreditation/events/12345/sync" \
+    -H "Authorization: Bearer ABCD-EFGH-1234-5678" \
+    -H "Accept: application/json"</code></pre>
+
+                <p>To keep the data up-to-date, the sync can then be called every 2 minutes to fetch only the changes since the last sync. The last sync time is passed as a timestamp with the query parameter `since`. To make sure no changes are missed, the current time minus 3 minutes can be used for the parameter `since`. e.g. at 15:08 the following call would be made:</p>
+                <pre><code>curl "https://api.worldskills.org/accreditation/events/12345/sync?since=2025-04-10T15:05:00Z" \
+    -H "Authorization: Bearer ABCD-EFGH-1234-5678" \
+    -H "Accept: application/json"</code></pre>
+
+                <h3>Send Scans</h3>
+
+                <p>If accreditations are scanned by a different system as part of access control, each scan should be sent to the Accreditation API for reporting. Scans don't need to be sent in realtime, but within 5 latest.</p>
+
+                <p>Each scan consists of the accreditation, a timestamp of the scan, the zone for which was scanned, and if the access was allowed.</p>
+
+                <pre><code>curl -X POST \
+    "http://localhost:8080/accreditation/events/12345/scan" \
+    -H "Authorization: Bearer ABCD-EFGH-1234-5678" \
+    -H "Accept: application/json" \
+    -H "Content-Type: application/json" \
+    -d '{
+        "accreditation_id": 98765,
+        "zone_id": 123,
+        "allowed": true,
+        "timestamp": "2025-04-20T09:21:00Z"
+    }'</code></pre>
+
+                <h3>Fetch Zones</h3>
+
+                <p>Available zones can be fetched by calling the following endpoint:</p>
+
+                <pre><code>curl "https://api.worldskills.org/accreditation/events/12345/zones" \
+    -H "Authorization: Bearer ABCD-EFGH-1234-5678" \
+    -H "Accept: application/json"</code></pre>
             </div>
             <div class="col-md-6">
 
